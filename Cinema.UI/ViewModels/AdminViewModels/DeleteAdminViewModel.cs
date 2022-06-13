@@ -44,6 +44,7 @@ namespace Cinema.UI.ViewModels.AdminViewModels
             {
                 return new DelegateCommand((obj) =>
                 {
+<<<<<<< HEAD
                     if (SelectedUser == null)
                     {
                         MessageBox.Show("You need to choose user to delete.");
@@ -52,6 +53,9 @@ namespace Cinema.UI.ViewModels.AdminViewModels
                     {
                         MessageBox.Show($"{SelectedUser.UserFirstName}");
                     }
+=======
+                    
+>>>>>>> eb8328086c863835e5bcd78ed4549eb90d2f7281
                 });
             }
         }

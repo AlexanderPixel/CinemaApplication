@@ -127,7 +127,7 @@ namespace Server
                 userService.Create(userSignUp);
                 return userSignUp;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return null;
             }
