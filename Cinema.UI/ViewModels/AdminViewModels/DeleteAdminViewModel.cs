@@ -50,7 +50,7 @@ namespace Cinema.UI.ViewModels.AdminViewModels
                     }
                     else
                     {
-
+                        MessageBox.Show($"{SelectedUser.UserFirstName}");
                     }
                 });
             }
