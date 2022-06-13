@@ -3,18 +3,20 @@ using Cinema.UI.Infrastructure;
 using Cinema.UI.Views;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Configuration;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace Cinema.UI.ViewModels
 {
     public class SignUpViewModel : BaseNotifyPropertyChanged
     {
-        private IPAddress address = IPAddress.Parse("127.0.0.1");
-        private int port = 30000;
+        private IPAddress address;
+        private int port;
 
         public UserDTO NewUser { get; set; }
 
@@ -62,6 +64,7 @@ namespace Cinema.UI.ViewModels
             if (response == 1)
             {
                 NewUser = jsonSearch["Data"].ToObject<UserDTO>();
+                client.Close();
                 return true;
             }
 
@@ -72,6 +75,8 @@ namespace Cinema.UI.ViewModels
         public SignUpViewModel()
         {
             NewUser = new UserDTO();
+            address = IPAddress.Parse(ConfigurationManager.AppSettings["ServerDefaultIp"]);
+            port = int.Parse(ConfigurationManager.AppSettings["ServerDefaultPort"]);
         }
     }
 }
