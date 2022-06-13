@@ -12,13 +12,14 @@ using System.Text;
 using System.Security.Cryptography;
 using System;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using System.Configuration;
 
 namespace Cinema.UI.ViewModels
 {
     public class SignInViewModel : BaseNotifyPropertyChanged
     {
-        private IPAddress address = IPAddress.Parse("127.0.0.1");
-        private int port = 30000;
+        private IPAddress address;
+        private int port;
 
         public UserDTO User { get; set; }
         public AdminDTO Admin { get; set; }
@@ -75,6 +76,8 @@ namespace Cinema.UI.ViewModels
         #region methods
         public SignInViewModel()
         {
+            address = IPAddress.Parse(ConfigurationManager.AppSettings["ServerDefaultIp"]);
+            port = int.Parse(ConfigurationManager.AppSettings["ServerDefaultPort"]);
         }
 
         private string GetEncryptedPassword(string password)

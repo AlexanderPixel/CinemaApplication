@@ -1,26 +1,34 @@
 ﻿using Cinema.BLL.DTO;
+using Cinema.BLL.Services;
+using Cinema.DAL.Context;
+using Cinema.DAL.Repositories;
 using Cinema.UI.Infrastructure;
 using Cinema.UI.Views;
+using Cinema.UI.Views.AdminViews;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace Cinema.UI.ViewModels
+namespace Cinema.UI.ViewModels.AdminViewModels
 {
-    public class SignUpViewModel : BaseNotifyPropertyChanged
+    public class AddAdminViewModel : BaseNotifyPropertyChanged
     {
         private IPAddress address;
         private int port;
-
         public UserDTO NewUser { get; set; }
 
-        public ICommand SignUpCommand
+        public ICommand AddAdminCommand
         {
             get
             {
@@ -28,10 +36,11 @@ namespace Cinema.UI.ViewModels
                 {
                     if (HandleClient())
                     {
-                        var signUpWindow = obj as SignUpWindow;
-                        var mainWindow = new MainWindow(NewUser);
-                        mainWindow.Show();
-                        signUpWindow.Close();
+                       if (MessageBoxResult.OK == MessageBox.Show($"Admin added."))
+                       {
+                            var addAdminWindow = obj as AddAdminWindow;
+                            addAdminWindow.Close();
+                       }
                     }
                     else
                     {
@@ -52,7 +61,7 @@ namespace Cinema.UI.ViewModels
             var textReader = new JsonTextReader(sr);
             var jsonSerializer = new JsonSerializer();
 
-            var obj = JsonConvert.SerializeObject(new { RequestType = "sign-up", Data = NewUser });
+            var obj = JsonConvert.SerializeObject(new { RequestType = "post-admin", Data = NewUser });
 
             jsonSerializer.Serialize(sw, obj);
             sw.Flush();
@@ -61,22 +70,19 @@ namespace Cinema.UI.ViewModels
             var jsonSearch = JObject.Parse(json);
             var response = int.Parse(jsonSearch["Response"].ToString());
 
-            if (response == 1)
-            {
-                NewUser = jsonSearch["Data"].ToObject<UserDTO>();
-                client.Close();
-                return true;
-            }
-
             client.Close();
+
+            if (response == 1) return true;
+
             return false;
         }
 
-        public SignUpViewModel()
+        public AddAdminViewModel()
         {
-            NewUser = new UserDTO();
             address = IPAddress.Parse(ConfigurationManager.AppSettings["ServerDefaultIp"]);
             port = int.Parse(ConfigurationManager.AppSettings["ServerDefaultPort"]);
+
+            NewUser = new UserDTO();
         }
     }
 }
