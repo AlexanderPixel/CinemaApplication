@@ -82,6 +82,7 @@
     <Compile Include="Infrastructure\DelegateCommand.cs" />
     <Compile Include="ViewModels\AdminViewModels\AddAdminViewModel.cs" />
     <Compile Include="ViewModels\AdminViewModels\AdminViewModel.cs" />
+    <Compile Include="ViewModels\AdminViewModels\DeleteAdminViewModel.cs" />
     <Compile Include="ViewModels\BookFilmViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\OpenFilmViewModel.cs" />
@@ -92,6 +93,9 @@
     </Compile>
     <Compile Include="Views\AdminViews\AdminWindow.xaml.cs">
       <DependentUpon>AdminWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\AdminViews\DeleteAdminWindow.xaml.cs">
+      <DependentUpon>DeleteAdminWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\BookFilmWindow.xaml.cs">
       <DependentUpon>BookFilmWindow.xaml</DependentUpon>
@@ -110,6 +114,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\AdminViews\AdminWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\AdminViews\DeleteAdminWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

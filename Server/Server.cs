@@ -5,6 +5,7 @@ using Cinema.DAL.Repositories;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -193,6 +194,23 @@ namespace Server
             {
                 var admin = PostAdmin(jsonSearch);
                 if (admin != null) jsonSerializer.Serialize(sw, new { Response = "1", Data = admin });
+                else jsonSerializer.Serialize(sw, new { Response = "0", Data = "Oops. Something wrong happened. Try later." });
+            }
+            else if (requestType == "get-admins")
+            {
+                var adminService = new AdminService(new AdminRepository(new CinemaContext()));
+                var userService = new UserService(new UserRepository(new CinemaContext()));
+                var admins = adminService.GetAll();
+                var users = userService.GetAll().Where(user => user.IsActive).Join(admins, user => user.UserId, admin => admin.UserId, (user, admin) => new
+                {
+                    UserLogin = user.UserLogin,
+                    UserFirstName = user.UserFirstName,
+                    UserLastName = user.UserLastName,
+                    UserPhone = user.UserPhone,
+                    UserEmail = user.UserEmail,
+                });
+                
+                if (users != null) jsonSerializer.Serialize(sw, new { Response = "1", Data = users });
                 else jsonSerializer.Serialize(sw, new { Response = "0", Data = "Oops. Something wrong happened. Try later." });
             }
             sw.Flush();

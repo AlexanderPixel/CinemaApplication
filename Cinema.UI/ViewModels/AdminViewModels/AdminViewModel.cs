@@ -26,7 +26,8 @@ namespace Cinema.UI.ViewModels
             {
                 return new DelegateCommand((obj) =>
                 {
-                    MessageBox.Show("DeleteAdminCommand");
+                    var window = new DeleteAdminWindow();
+                    window.Show();
                 });
             }
         }
