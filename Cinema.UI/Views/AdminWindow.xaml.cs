@@ -1,4 +1,5 @@
-﻿using Cinema.UI.ViewModels;
+﻿using Cinema.BLL.DTO;
+using Cinema.UI.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,10 +21,10 @@ namespace Cinema.UI.Views
     /// </summary>
     public partial class AdminWindow : Window
     {
-        public AdminWindow()
+        public AdminWindow(AdminDTO admin)
         {
             InitializeComponent();
-            DataContext = new AdminViewModel();
+            DataContext = new AdminViewModel(admin);
         }
     }
 }

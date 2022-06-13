@@ -21,6 +21,7 @@ namespace Cinema.UI.ViewModels
         private int port = 30000;
 
         public UserDTO User { get; set; }
+        public AdminDTO Admin { get; set; }
 
         #region commands
         public ICommand SignInCommand
@@ -29,11 +30,18 @@ namespace Cinema.UI.ViewModels
             {
                 return new DelegateCommand((obj) =>
                 {
-                    if (HandleClient())
+                    if (HandleClient() == "1")
                     {
                         var signInWindow = obj as SignInWindow;
                         var mainWindow = new MainWindow(User);
                         mainWindow.Show();
+                        signInWindow.Close();
+                    }
+                    else if (HandleClient() == "2")
+                    {
+                        var signInWindow = obj as SignInWindow;
+                        var adminWindow = new AdminWindow(Admin);
+                        adminWindow.Show();
                         signInWindow.Close();
                     }
                     else
@@ -82,36 +90,8 @@ namespace Cinema.UI.ViewModels
             return savedPasswordHash;
         }
 
-        private bool HandleClient()
+        private string HandleClient()
         {
-            // var hashedPassword = GetEncryptedPassword(Password);
-            /*var user = new UserDTO { UserLogin = Login, UserPassword = Password };
-            var client = new TcpClient();
-            client.Connect(address, port);
-
-            var ns = client.GetStream();
-            var sw = new StreamWriter(ns);
-            var sr = new StreamReader(ns);
-            var textReader = new JsonTextReader(sr);
-            var jsonSerializer = new JsonSerializer();
-
-            var obj = JsonConvert.SerializeObject(new { RequestType = "sign-in", Data = user });
-            jsonSerializer.Serialize(sw, obj);
-            sw.Flush();
-
-            var json = jsonSerializer.Deserialize(textReader).ToString();
-            var jsonSearch = JObject.Parse(json);
-            var response = int.Parse(jsonSearch["Response"].ToString());
-            
-            if (response == 1)
-            {
-                User = jsonSearch["Data"].ToObject<UserDTO>();
-                return true;
-            }
-
-            client.Close();
-            return false;*/
-
             var user = new UserDTO { UserLogin = Login, UserPassword = Password };
             var client = new TcpClient();
             client.Connect(address, port);
@@ -133,11 +113,18 @@ namespace Cinema.UI.ViewModels
             if (response == 1)
             {
                 User = jsonSearch["Data"].ToObject<UserDTO>();
-                return true;
+                client.Close();
+                return "1";
+            }
+            else if (response == 2)
+            {
+                Admin = jsonSearch["Data"].ToObject<AdminDTO>();
+                client.Close();
+                return "2";
             }
 
             client.Close();
-            return false;
+            return null;
         }
 
         #endregion

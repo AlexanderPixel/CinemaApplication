@@ -1,9 +1,5 @@
-﻿using Cinema.UI.Infrastructure;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Cinema.BLL.DTO;
+using Cinema.UI.Infrastructure;
 using System.Windows;
 using System.Windows.Input;
 
@@ -101,6 +97,17 @@ namespace Cinema.UI.ViewModels
                     MessageBox.Show("EditMovieCommand");
                 });
             }
+        }
+        #endregion
+
+        #region properties
+        public AdminDTO CurrentAdmin { get; set; }
+        #endregion
+
+        #region methods
+        public AdminViewModel(AdminDTO admin)
+        {
+            CurrentAdmin = admin;
         }
         #endregion
     }

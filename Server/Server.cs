@@ -78,7 +78,7 @@ namespace Server
         private bool UserIsAdmin(UserDTO user)
         {
             var adminService = new AdminService(new AdminRepository(new CinemaContext()));
-            var adminInDb = adminService.Get(user.UserId);
+            var adminInDb = adminService.GetAll().FirstOrDefault(admin => admin.UserId == user.UserId);
 
             if (adminInDb != null) return true;
 
@@ -133,26 +133,6 @@ namespace Server
 
         private void HandleClient(TcpClient client)
         {
-            /*Console.WriteLine($"Request from {client.Client.RemoteEndPoint} at {DateTime.Now}");
-
-            var ns = client.GetStream();
-            var sr = new StreamReader(ns);
-            var sw = new StreamWriter(ns);
-            var textReader = new JsonTextReader(sr);
-            var jsonSerializer = new JsonSerializer();
-
-            var json = jsonSerializer.Deserialize(textReader).ToString();
-            var jsonSearch = JObject.Parse(json);
-            var requestType = jsonSearch["RequestType"].ToString();
-
-            UserDTO user = null;
-            if (requestType == "sign-in") user = HandleSignIn(jsonSearch);
-            else if (requestType == "sign-up") user = HandleSignUp(jsonSearch);
-
-            if (user != null) jsonSerializer.Serialize(sw, new { Response = "1", Data = user });
-            else jsonSerializer.Serialize(sw, new { Response = "0", Data = "User not found." });
-            sw.Flush();*/
-
             Console.WriteLine($"Request from {client.Client.RemoteEndPoint} at {DateTime.Now}");
 
             var ns = client.GetStream();
@@ -185,7 +165,6 @@ namespace Server
                 var user = HandleSignUp(jsonSearch);
                 if (user != null) jsonSerializer.Serialize(sw, new { Response = "1", Data = user });
                 else jsonSerializer.Serialize(sw, new { Response = "0", Data = "Oops. Something wrong happened. Try later." });
-
             }
             sw.Flush();
         }

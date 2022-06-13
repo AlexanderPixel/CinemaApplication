@@ -19,7 +19,8 @@ namespace Cinema.BLL.Services
             {
                 cfg.CreateMap<AdminDTO, Admin>()
                     .ForMember(admin => admin.AdminId, opt => opt.MapFrom(adminDTO => adminDTO.AdminId))
-                    .ForMember(admin => admin.UserId, opt => opt.MapFrom(adminDTO => adminDTO.UserId));
+                    .ForMember(admin => admin.UserId, opt => opt.MapFrom(adminDTO => adminDTO.UserId))
+                    .ReverseMap();
             });
 
             mapper = new Mapper(configuration);
