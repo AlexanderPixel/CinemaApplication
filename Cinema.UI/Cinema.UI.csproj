@@ -6,7 +6,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{17CAF7A7-9C45-4463-8DAB-00909D5D3449}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>WinExe</OutputType>
     <RootNamespace>Cinema.UI</RootNamespace>
     <AssemblyName>Cinema.UI</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
@@ -58,6 +58,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -79,13 +80,17 @@
     </ApplicationDefinition>
     <Compile Include="Infrastructure\BaseNotifyPropertyChanged.cs" />
     <Compile Include="Infrastructure\DelegateCommand.cs" />
-    <Compile Include="ViewModels\AdminViewModel.cs" />
+    <Compile Include="ViewModels\AdminViewModels\AddAdminViewModel.cs" />
+    <Compile Include="ViewModels\AdminViewModels\AdminViewModel.cs" />
     <Compile Include="ViewModels\BookFilmViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\OpenFilmViewModel.cs" />
     <Compile Include="ViewModels\SignInViewModel.cs" />
     <Compile Include="ViewModels\SignUpViewModel.cs" />
-    <Compile Include="Views\AdminWindow.xaml.cs">
+    <Compile Include="Views\AdminViews\AddAdminWindow.xaml.cs">
+      <DependentUpon>AddAdminWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\AdminViews\AdminWindow.xaml.cs">
       <DependentUpon>AdminWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\BookFilmWindow.xaml.cs">
@@ -100,7 +105,11 @@
     <Compile Include="Views\SignUpWindow.xaml.cs">
       <DependentUpon>SignUpWindow.xaml</DependentUpon>
     </Compile>
-    <Page Include="Views\AdminWindow.xaml">
+    <Page Include="Views\AdminViews\AddAdminWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\AdminViews\AdminWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -164,6 +173,10 @@
     <ProjectReference Include="..\Cinema.BLL\Cinema.BLL.csproj">
       <Project>{DB83581F-6542-47C6-89F5-726E16906A43}</Project>
       <Name>Cinema.BLL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cinema.DAL\Cinema.DAL.csproj">
+      <Project>{DE505F99-2E60-4C00-9889-C9269E774A30}</Project>
+      <Name>Cinema.DAL</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

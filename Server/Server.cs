@@ -118,6 +118,7 @@ namespace Server
                 var userSignUp = json["Data"].ToObject<UserDTO>();
                 userSignUp.IsActive = true;
                 userSignUp.UserLastLoginDateTime = DateTime.Now;
+
                 /*var hashedPassword = GetEncryptedPassword(userSignUp.UserPassword);
                 userSignUp.UserPassword = hashedPassword;*/
 
@@ -129,6 +130,28 @@ namespace Server
             {
                 return null;
             }
+        }
+
+        private AdminDTO PostAdmin(JObject json)
+        {
+            var user = json["Data"].ToObject<UserDTO>();
+            user.IsActive = true;
+            user.UserLastLoginDateTime = DateTime.Now;
+
+            var userService = new UserService(new UserRepository(new CinemaContext()));
+            userService.Create(user);
+
+            var userInDb = userService.GetAll().FirstOrDefault(u => u.UserLogin == user.UserLogin);
+
+            var admin = new AdminDTO
+            {
+                UserId = userInDb.UserId,
+            };
+
+            var adminService = new AdminService(new AdminRepository(new CinemaContext()));
+            adminService.Create(admin);
+
+            return admin;
         }
 
         private void HandleClient(TcpClient client)
@@ -164,6 +187,12 @@ namespace Server
             {
                 var user = HandleSignUp(jsonSearch);
                 if (user != null) jsonSerializer.Serialize(sw, new { Response = "1", Data = user });
+                else jsonSerializer.Serialize(sw, new { Response = "0", Data = "Oops. Something wrong happened. Try later." });
+            }
+            else if (requestType == "post-admin")
+            {
+                var admin = PostAdmin(jsonSearch);
+                if (admin != null) jsonSerializer.Serialize(sw, new { Response = "1", Data = admin });
                 else jsonSerializer.Serialize(sw, new { Response = "0", Data = "Oops. Something wrong happened. Try later." });
             }
             sw.Flush();

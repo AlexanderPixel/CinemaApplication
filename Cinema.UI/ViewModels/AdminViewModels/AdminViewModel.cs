@@ -1,5 +1,6 @@
 ﻿using Cinema.BLL.DTO;
 using Cinema.UI.Infrastructure;
+using Cinema.UI.Views.AdminViews;
 using System.Windows;
 using System.Windows.Input;
 
@@ -14,7 +15,8 @@ namespace Cinema.UI.ViewModels
             {
                 return new DelegateCommand((obj) =>
                 {
-                    MessageBox.Show("AddAdminCommand");
+                    var window = new AddAdminWindow();
+                    window.Show();
                 });
             }
         }
