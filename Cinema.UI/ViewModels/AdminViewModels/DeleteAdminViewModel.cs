@@ -17,6 +17,8 @@ namespace Cinema.UI.ViewModels.AdminViewModels
     public class DeleteAdminViewModel : BaseNotifyPropertyChanged
     {
         private ObservableCollection<UserDTO> userDTOs;
+        private IPAddress address;
+        private int port;
 
         public ObservableCollection<UserDTO> Users 
         {
@@ -32,6 +34,9 @@ namespace Cinema.UI.ViewModels.AdminViewModels
 
         public DeleteAdminViewModel()
         {
+            address = IPAddress.Parse(ConfigurationManager.AppSettings["ServerDefaultIp"]);
+            port = int.Parse(ConfigurationManager.AppSettings["ServerDefaultPort"]);
+
             Task.Run(() =>
             {
                 LoadAdmins();
@@ -50,10 +55,45 @@ namespace Cinema.UI.ViewModels.AdminViewModels
                     }
                     else
                     {
-                        MessageBox.Show($"{SelectedUser.UserFirstName}");
+                        if (DeleteUser())
+                        {
+                            MessageBox.Show("User successfully deleted.");
+                            LoadAdmins();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Error occurred.");
+                        }
                     }
                 });
             }
+        }
+
+        private bool DeleteUser()
+        {
+            var client = new TcpClient();
+            client.Connect(address, port);
+
+            var ns = client.GetStream();
+            var sw = new StreamWriter(ns);
+            var sr = new StreamReader(ns);
+            var textReader = new JsonTextReader(sr);
+            var jsonSerializer = new JsonSerializer();
+
+            var obj = JsonConvert.SerializeObject(new { RequestType = "delete-user", Data = SelectedUser });
+
+            jsonSerializer.Serialize(sw, obj);
+            sw.Flush();
+
+            var json = jsonSerializer.Deserialize(textReader).ToString();
+            var jsonSearch = JObject.Parse(json);
+            var response = int.Parse(jsonSearch["Response"].ToString());
+
+            client.Close();
+
+            if (response == 1) return true;
+
+            return false;
         }
 
         private void LoadAdmins()
